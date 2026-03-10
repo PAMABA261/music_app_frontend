@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 class MinijuegoRitmo extends StatefulWidget {
-  final bool
-  isActive; // 👈 1. Nueva variable para saber si estamos en esta pestaña
+  final bool isActive;
 
   const MinijuegoRitmo({super.key, required this.isActive});
 
@@ -16,7 +15,7 @@ class _MinijuegoRitmoState extends State<MinijuegoRitmo> {
   final int bpm = 120;
   late int msPorBeat;
 
-  Stopwatch _cronometro = Stopwatch();
+  final Stopwatch _cronometro = Stopwatch();
   Timer? _metronomoVisual;
   final AudioPlayer _metronomoPlayer = AudioPlayer();
 
