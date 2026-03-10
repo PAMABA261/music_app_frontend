@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'piano_widget.dart';
 import 'bateria_widget.dart';
+import 'minijuego_ritmo.dart';
 
 class PantallaInstrumentos extends StatefulWidget {
   const PantallaInstrumentos({super.key});
@@ -10,8 +11,8 @@ class PantallaInstrumentos extends StatefulWidget {
 }
 
 class _PantallaInstrumentosState extends State<PantallaInstrumentos> {
-  int currentInstrumentIndex = 0; 
-  final List<String> instruments = ['Piano', 'Batería'];
+  int currentInstrumentIndex = 0;
+  final List<String> instruments = ['Piano', 'Batería', 'Minijuego de Ritmo'];
 
   void _changeInstrument(int direction) {
     setState(() {
@@ -40,11 +41,14 @@ class _PantallaInstrumentosState extends State<PantallaInstrumentos> {
                 onPressed: () => _changeInstrument(-1),
               ),
               SizedBox(
-                width: 150,
+                width: 170,
                 child: Text(
                   instruments[currentInstrumentIndex],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               IconButton(
@@ -58,9 +62,11 @@ class _PantallaInstrumentosState extends State<PantallaInstrumentos> {
         Expanded(
           child: IndexedStack(
             index: currentInstrumentIndex,
-            children: const [
-              PianoWidget(),
-              BateriaWidget(),
+            children: [
+              const PianoWidget(),
+              const BateriaWidget(),
+              // 👇 Le pasamos true si estamos en la pestaña 2, o false si estamos en otra
+              MinijuegoRitmo(isActive: currentInstrumentIndex == 2),
             ],
           ),
         ),

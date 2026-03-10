@@ -7,8 +7,9 @@ plugins {
 
 android {
     namespace = "com.example.music_frontend"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // Forzamos el SDK 34 (Android 14) que es el estándar actual estable
+    compileSdk = 34 
+    ndkVersion = "25.1.8937393" // Una versión estable del NDK
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -16,18 +17,16 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = "17"
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.music_frontend"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        // Cambiamos las variables de flutter por números reales
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
     }
 
     buildTypes {
