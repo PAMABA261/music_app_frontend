@@ -14,7 +14,6 @@ class _PianoWidgetState extends State<PianoWidget> {
 
   bool useEnglishNames = false;
   bool useFlats = false;
-
   bool _isInitialScrollDone = false;
 
   final Map<String, String> englishTranslation = {
@@ -50,13 +49,19 @@ class _PianoWidgetState extends State<PianoWidget> {
 
   List<String> whiteNotes = [];
   Map<int, String> blackNotes = {};
-  final Map<String, AudioPlayer> _pianoPlayers = {};
+
+  // 👇 1. NUESTRA PISCINA DE REPRODUCTORES (Solo 10 en lugar de 88)
+  final List<AudioPlayer> _polyphonyPlayers = List.generate(
+    10,
+    (_) => AudioPlayer(),
+  );
+  int _currentPlayerIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _generateKeyboard();
-    _preloadPianoSounds();
+    // Ya no llamamos a _preloadPianoSounds() porque los creamos al vuelo
   }
 
   void _generateKeyboard() {
@@ -85,38 +90,30 @@ class _PianoWidgetState extends State<PianoWidget> {
     whiteNotes.add('Do8');
   }
 
-  void _preloadPianoSounds() {
-    for (String note in whiteNotes) {
-      _setupPianoPlayer(note, false);
-    }
-    for (String note in blackNotes.values) {
-      _setupPianoPlayer(note, true);
-    }
-  }
-
-  void _setupPianoPlayer(String noteName, bool isBlack) {
-    String file = noteName.toLowerCase();
-    if (isBlack) file = file.replaceAll('#', '_s');
-    final player = AudioPlayer();
-    player.setSource(AssetSource('audio/$file.mp3'));
-    _pianoPlayers[noteName] = player;
-  }
-
+  // 👇 2. NUEVA FUNCIÓN PARA REPRODUCIR RECICLANDO REPRODUCTORES
   void _playPianoSound(String noteName) {
     if (currentNote == noteName) return;
     setState(() {
       currentNote = noteName;
     });
-    final player = _pianoPlayers[noteName];
-    if (player != null) {
-      player.stop();
-      player.resume();
-    }
+
+    // Averiguamos el nombre del archivo al momento
+    bool isBlack = noteName.contains('#');
+    String file = noteName.toLowerCase();
+    if (isBlack) file = file.replaceAll('#', '_s');
+
+    // Cogemos un reproductor libre, le ponemos el sonido y lo lanzamos
+    final player = _polyphonyPlayers[_currentPlayerIndex];
+    player.play(AssetSource('audio/$file.mp3'));
+
+    // Pasamos al siguiente reproductor para la próxima nota (del 0 al 9 en bucle)
+    _currentPlayerIndex = (_currentPlayerIndex + 1) % _polyphonyPlayers.length;
   }
 
   @override
   void dispose() {
-    for (var player in _pianoPlayers.values) {
+    // 👇 3. Limpiamos solo los 10 reproductores
+    for (var player in _polyphonyPlayers) {
       player.dispose();
     }
     _scrollController.dispose();
