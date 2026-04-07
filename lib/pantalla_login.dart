@@ -3,6 +3,7 @@ import 'pantalla_instrumentos.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'pantalla_registro.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PantallaLogin extends StatefulWidget {
   const PantallaLogin({super.key});
@@ -40,7 +41,10 @@ class _PantallaLoginState extends State<PantallaLogin> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("Token recibido: ${data['token']}");
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token_jwt', data['token']);
+        print("¡Pulsera VIP guardada en el móvil!");
 
         Navigator.pushReplacement(
           context,

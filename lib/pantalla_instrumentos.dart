@@ -3,6 +3,7 @@ import 'piano_widget.dart';
 import 'bateria_widget.dart';
 import 'minijuego_ritmo.dart';
 import 'pantalla_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PantallaInstrumentos extends StatefulWidget {
   const PantallaInstrumentos({super.key});
@@ -45,7 +46,13 @@ class _PantallaInstrumentosState extends State<PantallaInstrumentos> {
           IconButton(
             icon: const Icon(Icons.logout),
             tooltip: 'Cerrar sesión',
-            onPressed: () {
+            onPressed: () async {
+              // 👇 BORRAMOS EL TOKEN DE LA MEMORIA ANTES DE SALIR
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.remove('token_jwt');
+
+              if (!context.mounted) return;
+
               // Navegamos de vuelta al Login y destruimos esta pantalla
               Navigator.pushReplacement(
                 context,
