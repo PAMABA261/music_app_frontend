@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'pantalla_registro.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'pantalla_menu.dart';
 
 class PantallaLogin extends StatefulWidget {
   const PantallaLogin({super.key});
@@ -48,7 +49,7 @@ class _PantallaLoginState extends State<PantallaLogin> {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const PantallaInstrumentos()),
+          MaterialPageRoute(builder: (context) => const PantallaMenu()),
         );
       } else if (response.statusCode == 401) {
         setState(() {
